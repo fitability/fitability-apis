@@ -1,2 +1,4 @@
-# fitability-apis
-This provides APIs for all fitability apps
+# fitability:tm: API #
+
+This provides APIs for all fitability:tm: apps.
+
