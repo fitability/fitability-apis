@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'csharp' ]
+        language: [ 'csharp', 'java' ]
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
         # Learn more about CodeQL language support at https://git.io/codeql-language-support
 
@@ -44,6 +44,14 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '6.x'
+
+    - name: Setup JDK 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'microsoft'
+        java-version: '17.x'
+        cache: 'maven'
+        check-latest: true
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
