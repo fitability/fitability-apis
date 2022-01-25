@@ -46,12 +46,12 @@ jobs:
       with:
         dotnet-version: '6.x'
 
-    - name: Setup JDK 17
+    - name: Setup JDK 11
       if: matrix.language == 'java'
       uses: actions/setup-java@v2
       with:
         distribution: 'microsoft'
-        java-version: '17.x'
+        java-version: '11.x'
         cache: 'maven'
         check-latest: true
 
