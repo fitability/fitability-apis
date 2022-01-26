@@ -33,7 +33,7 @@ if ($needHelp -eq $true) {
 
 $repositoryRoot = $(git rev-parse --show-toplevel)
 if (($env:GITHUB_WORKSPACE -ne "") -and ($env:GITHUB_WORKSPACE -ne $null)) {
-    $repositoryRoot = $GITHUB_WORKSPACE
+    $repositoryRoot = $env:GITHUB_WORKSPACE
 }
 
 cd $repositoryRoot/$AppName
