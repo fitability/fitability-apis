@@ -90,3 +90,8 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+
+    - name: Get runner temp directory
+      shell: pwsh
+      run: |
+        Write-Output $RUNNER_TEMP
