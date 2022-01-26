@@ -84,9 +84,9 @@ jobs:
 
     - name: Build Java
       if: matrix.language == 'java'
+      shell: pwsh
       run: |
-        make bootstrap
-        make release
+        ./Build-JavaApp.ps1 "workouts"
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
