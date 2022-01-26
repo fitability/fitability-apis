@@ -91,7 +91,7 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
 
-    - name: Get runner temp directory
+    - name: Get analysis report
       shell: pwsh
       run: |
-        Write-Output $env:RUNNER_TEMP
+        Write-Output "Result: $env:RUNNER_TEMP/codeql_databases/${{ matrix.language }}.zip"
