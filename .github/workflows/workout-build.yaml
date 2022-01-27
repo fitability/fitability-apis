@@ -106,7 +106,7 @@ jobs:
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.FUNCTIONAPP_NAME }}
-        package: ${{ env.API_NAME }}/target/azure-functions/${{ env.API_NAME }}'
+        package: ${{ env.API_NAME }}/target/azure-functions/${{ env.API_NAME }}
         publish-profile: ${{ steps.publishprofile.outputs.profile }}
 
     - name: Reset FunctionApp publish profile
