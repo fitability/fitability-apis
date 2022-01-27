@@ -53,13 +53,6 @@ jobs:
         cache: 'maven'
         check-latest: true
 
-    - name: Check JDK
-      shell: bash
-      run: |
-        echo $JAVA_HOME
-        java --version
-        mvn -v
-
     - name: Initialise CodeQL
       uses: github/codeql-action/init@v1
       with:
@@ -94,6 +87,12 @@ jobs:
         mvn azure-functions:package
         popd
 
+    - name: Check artifact
+      shell: bash
+      run: |
+        cd ${{ env.API_NAME }}/target/azure-functions/${{ env.API_NAME }}/output
+        ls -al
+
     - name: Get FunctionApp publish profile
       id: publishprofile
       uses: aliencube/publish-profile-actions@v1
@@ -107,7 +106,7 @@ jobs:
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.FUNCTIONAPP_NAME }}
-        package: ${{ env.API_NAME }}/target/azure-functions/${{ env.API_NAME }}'
+        package: ${{ env.API_NAME }}/target/azure-functions/${{ env.API_NAME }}/output'
         publish-profile: ${{ steps.publishprofile.outputs.profile }}
 
     - name: Reset FunctionApp publish profile
