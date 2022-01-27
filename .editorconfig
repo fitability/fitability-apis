@@ -13,3 +13,6 @@ insert_final_newline = false
 
 [*.{json,yml,yaml}]
 indent_size = 2
+
+[*.bicep]
+indent_size = 4
