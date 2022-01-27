@@ -87,12 +87,6 @@ jobs:
         mvn azure-functions:package
         popd
 
-    - name: Check artifact
-      shell: bash
-      run: |
-        cd ${{ env.API_NAME }}/target/azure-functions/${{ env.API_NAME }}
-        ls -al
-
     - name: Get FunctionApp publish profile
       id: publishprofile
       uses: aliencube/publish-profile-actions@v1
