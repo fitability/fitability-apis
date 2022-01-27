@@ -97,11 +97,17 @@ jobs:
         appName: ${{ env.FUNCTIONAPP_NAME }}
 
     - name: Deploy FunctionApp
+      id: fncapp
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.FUNCTIONAPP_NAME }}
         package: ${{ env.API_NAME }}/target/azure-functions/${{ env.API_NAME }}
         publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Display published app URL
+      shell: bash
+      run: |
+        echo 'Published to: ${{ steps.fncapp.outputs.app-url }}'
 
     - name: Reset FunctionApp publish profile
       uses: aliencube/publish-profile-actions@v1
