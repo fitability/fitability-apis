@@ -1,4 +1,4 @@
-name: 'Build: Users API'
+name: 'Build: User API'
 
 on:
   push:
@@ -13,12 +13,12 @@ on:
     - 'users/**'
 
 env:
-  FUNCTIONAPP_PATH: '${{ github.workspace }}/users/src/Fitability.Api.Users'
-  APP_NAME: 'users'
+  API_NAME: 'users'
+  FUNCTIONAPP_PATH: '${{ github.workspace }}/${{ env.API_NAME }}/src/Fitability.Api.Users'
 
 jobs:
-  functionapp_build_test_deploy_dev:
-    name: 'FunctionApp Build, Test & Deploy'
+  build_test_analyse_deploy:
+    name: 'User API'
 
     runs-on: ubuntu-latest
     environment: 'dev'
@@ -49,19 +49,19 @@ jobs:
     - name: Restore NuGet packages
       shell: bash
       run: |
-        cd "${{ github.workspace }}/${{ env.APP_NAME }}"
+        cd "${{ github.workspace }}/${{ env.API_NAME }}"
         dotnet restore .
 
     - name: Build solution
       shell: bash
       run: |
-        cd "${{ github.workspace }}/${{ env.APP_NAME }}"
+        cd "${{ github.workspace }}/${{ env.API_NAME }}"
         dotnet build . -c Release
 
     - name: Test solution
       shell: bash
       run: |
-        cd "${{ github.workspace }}/${{ env.APP_NAME }}"
+        cd "${{ github.workspace }}/${{ env.API_NAME }}"
         dotnet test . -c Release
 
     - name: Perform CodeQL analysis
@@ -75,7 +75,7 @@ jobs:
     - name: Create FunctionApp artifact
       shell: bash
       run: |
-        cd "${{ github.workspace }}/${{ env.APP_NAME }}"
+        cd "${{ github.workspace }}/${{ env.API_NAME }}"
         dotnet publish ${{ env.FUNCTIONAPP_PATH }} -c Release -o published
 
     - name: Get FunctionApp publish profile
@@ -91,7 +91,7 @@ jobs:
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.FUNCTIONAPP_NAME }}
-        package: published
+        package: ${{ env.API_NAME }}/published
         publish-profile: ${{ steps.publishprofile.outputs.profile }}
 
     - name: Reset FunctionApp publish profile
