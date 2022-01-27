@@ -30,13 +30,12 @@ jobs:
         echo "FUNCTIONAPP_NAME=fncapp-${{ secrets.RESOURCE_NAME }}-$API_NAME-${{ secrets.ENVIRONMENT }}-${{ secrets.LOCATION_CODE }}" >> $GITHUB_ENV
         echo "FUNCTIONAPP_PATH=${{ github.workspace }}/$API_NAME" >> $GITHUB_ENV
 
-    - name: Check environment variables
-      shell: bash
-      run: |
-        # echo $RESOURCE_GROUP_NAME
-        # echo $FUNCTIONAPP_NAME
-        # echo $FUNCTIONAPP_PATH
-        echo $JAVA_HOME
+    # - name: Check environment variables
+    #   shell: bash
+    #   run: |
+    #     echo $RESOURCE_GROUP_NAME
+    #     echo $FUNCTIONAPP_NAME
+    #     echo $FUNCTIONAPP_PATH
 
     - name: Checkout the repo
       uses: actions/checkout@v2
@@ -54,6 +53,13 @@ jobs:
         java-version: '17.x'
         cache: 'maven'
         check-latest: true
+
+    - name: Check JDK
+      shell: bash
+      run: |
+        echo $JAVA_HOME
+        java --version
+        mvn -v
 
     - name: Initialise CodeQL
       uses: github/codeql-action/init@v1
