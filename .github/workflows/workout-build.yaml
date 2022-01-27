@@ -1,0 +1,114 @@
+name: 'Build: Workout API'
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - 'workouts/**'
+  pull_request:
+    branches:
+    - main
+    paths:
+    - 'workouts/**'
+
+env:
+  API_NAME: 'workouts'
+
+jobs:
+  build_test_analyse_deploy:
+    name: 'Workout API'
+
+    runs-on: ubuntu-latest
+    environment: 'dev'
+
+    steps:
+    - name: Set environment variables
+      shell: bash
+      run: |
+        echo "RESOURCE_GROUP_NAME=rg-${{ secrets.RESOURCE_NAME }}-${{ secrets.ENVIRONMENT }}-${{ secrets.LOCATION_CODE }}" >> $GITHUB_ENV
+        echo "FUNCTIONAPP_NAME=fncapp-${{ secrets.RESOURCE_NAME }}-$API_NAME-${{ secrets.ENVIRONMENT }}-${{ secrets.LOCATION_CODE }}" >> $GITHUB_ENV
+        echo "FUNCTIONAPP_PATH=${{ github.workspace }}/$API_NAME" >> $GITHUB_ENV
+
+    # - name: Check environment variables
+    #   shell: bash
+    #   run: |
+    #     echo $RESOURCE_GROUP_NAME
+    #     echo $FUNCTIONAPP_NAME
+    #     echo $FUNCTIONAPP_PATH
+
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup JDK
+      if: matrix.language == 'java'
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'microsoft'
+        java-version: '17.x'
+        cache: 'maven'
+        check-latest: true
+
+    - name: Initialise CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: 'java'
+
+    - name: Restore packages and build project
+      shell: bash
+      run: |
+        pushd $FUNCTIONAPP_PATH
+        mvn clean package
+        popd
+
+    - name: Test project
+      shell: bash
+      run: |
+        pushd $FUNCTIONAPP_PATH
+        mvn test
+        popd
+
+    - name: Perform CodeQL analysis
+      uses: github/codeql-action/analyze@v1
+
+    - name: Get CodeQL analysis report
+      shell: pwsh
+      run: |
+        Write-Output "Result: $env:RUNNER_TEMP/codeql_databases/java.zip"
+
+    - name: Create FunctionApp artifact
+      shell: bash
+      run: |
+        pushd $FUNCTIONAPP_PATH
+        mvn azure-functions:package
+        popd
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.API_NAME }}/target/azure-functions/${{ env.API_NAME }}'
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true

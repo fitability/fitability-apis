@@ -7,14 +7,15 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Azure Java Functions</name>
+    <name>Workout API</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <!-- <java.version>1.8</java.version> -->
+        <java.version>17</java.version>
         <azure.functions.maven.plugin.version>1.14.0</azure.functions.maven.plugin.version>
         <azure.functions.java.library.version>1.4.2</azure.functions.java.library.version>
-        <functionAppName>workouts-1643106552053</functionAppName>
+        <functionAppName>workouts</functionAppName>
     </properties>
 
     <dependencies>
