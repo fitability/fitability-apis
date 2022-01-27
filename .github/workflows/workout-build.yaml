@@ -30,12 +30,13 @@ jobs:
         echo "FUNCTIONAPP_NAME=fncapp-${{ secrets.RESOURCE_NAME }}-$API_NAME-${{ secrets.ENVIRONMENT }}-${{ secrets.LOCATION_CODE }}" >> $GITHUB_ENV
         echo "FUNCTIONAPP_PATH=${{ github.workspace }}/$API_NAME" >> $GITHUB_ENV
 
-    # - name: Check environment variables
-    #   shell: bash
-    #   run: |
-    #     echo $RESOURCE_GROUP_NAME
-    #     echo $FUNCTIONAPP_NAME
-    #     echo $FUNCTIONAPP_PATH
+    - name: Check environment variables
+      shell: bash
+      run: |
+        # echo $RESOURCE_GROUP_NAME
+        # echo $FUNCTIONAPP_NAME
+        # echo $FUNCTIONAPP_PATH
+        echo $JAVA_HOME
 
     - name: Checkout the repo
       uses: actions/checkout@v2
