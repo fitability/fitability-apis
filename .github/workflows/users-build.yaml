@@ -13,7 +13,7 @@ on:
     - 'users/**'
 
 env:
-  FUNCTIONAPP_PATH: '${{ GITHUB_WORKSPACE }}/users/src/Fitability.Api.Users'
+  FUNCTIONAPP_PATH: '${{ github.workspace }}/users/src/Fitability.Api.Users'
   APP_NAME: 'users'
 
 jobs:
@@ -49,19 +49,19 @@ jobs:
     - name: Restore NuGet packages
       shell: bash
       run: |
-        cd "${{ GITHUB_WORKSPACE }}/${{ env.APP_NAME }}"
+        cd "${{ github.workspace }}/${{ env.APP_NAME }}"
         dotnet restore .
 
     - name: Build solution
       shell: bash
       run: |
-        cd "${{ GITHUB_WORKSPACE }}/${{ env.APP_NAME }}"
+        cd "${{ github.workspace }}/${{ env.APP_NAME }}"
         dotnet build . -c Release
 
     - name: Test solution
       shell: bash
       run: |
-        cd "${{ GITHUB_WORKSPACE }}/${{ env.APP_NAME }}"
+        cd "${{ github.workspace }}/${{ env.APP_NAME }}"
         dotnet test . -c Release
 
     - name: Perform CodeQL analysis
@@ -75,7 +75,7 @@ jobs:
     - name: Create FunctionApp artifact
       shell: bash
       run: |
-        cd "${{ GITHUB_WORKSPACE }}/${{ env.APP_NAME }}"
+        cd "${{ github.workspace }}/${{ env.APP_NAME }}"
         dotnet publish ${{ env.FUNCTIONAPP_PATH }} -c Release -o published
 
     - name: Get FunctionApp publish profile
