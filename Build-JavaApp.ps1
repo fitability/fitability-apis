@@ -38,6 +38,9 @@ if (($env:GITHUB_WORKSPACE -ne "") -and ($env:GITHUB_WORKSPACE -ne $null)) {
 
 cd $repositoryRoot/$AppName
 
+Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Building Java app ..."
 mvn clean package
 
 cd $repositoryRoot
+
+Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Java app has been built"
