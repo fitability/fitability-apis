@@ -1,0 +1,104 @@
+name: 'Build: Users API'
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - 'users/**'
+  pull_request:
+    branches:
+    - main
+    paths:
+    - 'users/**'
+
+env:
+  FUNCTIONAPP_PATH: '${{ env.GITHUB_WORKSPACE }}/users/src/Fitability.Api.Users'
+  APP_NAME: 'users'
+
+jobs:
+  functionapp_build_test_deploy_dev:
+    name: 'FunctionApp Build, Test & Deploy'
+
+    runs-on: ubuntu-latest
+    environment: 'dev'
+
+    env:
+      RESOURCE_GROUP_NAME: 'rg-${{ secrets.RESOURCE_NAME }}-${{ secrets.ENVIRONMENT }}-${{ secrets.LOCATION_CODE }}'
+      FUNCTIONAPP_NAME: 'fncapp-${{ secrets.RESOURCE_NAME }}-users-${{ secrets.ENVIRONMENT }}-${{ secrets.LOCATION_CODE }}'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.x'
+
+    - name: Initialise CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: 'csharp'
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        cd "${{ env.GITHUB_WORKSPACE }}/${{ env.APP_NAME }}"
+        dotnet restore .
+
+    - name: Build solution
+      shell: bash
+      run: |
+        cd "${{ env.GITHUB_WORKSPACE }}/${{ env.APP_NAME }}"
+        dotnet build . -c Release
+
+    - name: Test solution
+      shell: bash
+      run: |
+        cd "${{ env.GITHUB_WORKSPACE }}/${{ env.APP_NAME }}"
+        dotnet test . -c Release
+
+    - name: Perform CodeQL analysis
+      uses: github/codeql-action/analyze@v1
+
+    - name: Get CodeQL analysis report
+      shell: pwsh
+      run: |
+        Write-Output "Result: $env:RUNNER_TEMP/codeql_databases/csharp.zip"
+
+    - name: Create FunctionApp artifact
+      shell: bash
+      run: |
+        cd "${{ env.GITHUB_WORKSPACE }}/${{ env.APP_NAME }}"
+        dotnet publish ${{ env.FUNCTIONAPP_PATH }} -c Release -o published
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: published
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
