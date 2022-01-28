@@ -7,7 +7,7 @@
       "problemMatcher": "$func-java-watch",
       "isBackground": true,
       "options": {
-        "cwd": "${workspaceFolder}/target/azure-functions/workouts-1643106552053"
+        "cwd": "${workspaceFolder}/target/azure-functions/workouts"
       },
       "dependsOn": "package (functions)"
     },

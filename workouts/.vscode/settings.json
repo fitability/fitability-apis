@@ -1,6 +1,6 @@
 {
   "azureFunctions.javaBuildTool": "maven",
-  "azureFunctions.deploySubpath": "target/azure-functions/workouts-1643106552053",
+  "azureFunctions.deploySubpath": "target/azure-functions/workouts",
   "azureFunctions.projectLanguage": "Java",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
