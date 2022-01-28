@@ -23,7 +23,6 @@ jobs:
       environment: 'dev'
       api_name: 'users'
       api_app_name: 'Fitability.Api.Users'
-      api_app_path: '${{ github.workspace }}/users'
       location_code: 'krc'
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
