@@ -89,6 +89,11 @@ Param(
 
     [string]
     [Parameter(Mandatory=$false)]
+    [ValidateSet("v3", "v4")]
+    $FunctionExtensionVersion = "v4",
+
+    [string]
+    [Parameter(Mandatory=$false)]
     [ValidateSet("dotnet", "dotnet-isolated", "java", "node", "poweshell", "python")]
     $FunctionWorkerRuntime = "dotnet",
     ### Function App ###
@@ -220,6 +225,7 @@ function Show-Usage {
 
             [-ProvisionFunctionApp <`$true|`$false>] ``
             [-FunctionEnvironment <Function App environment>] ``
+            [-FunctionExtensionVersion <Function App extension version>] ``
             [-FunctionWorkerRuntime <Function App worker runtime>] ``
 
             [-ProvisionServiceBus <`$true|`$false>] ``
@@ -258,94 +264,96 @@ function Show-Usage {
         -ResourceNameSuffix               Resource name suffix.
                                           Default is empty string.
         -LocationCode                     location code.
-                                          Default is `wus2`.
+                                          Default is 'wus2'.
         -Environment                      environment.
-                                          Default is `dev`.
+                                          Default is 'dev'.
 
         -ProvisionStorageAccount          To provision Storage Account or not.
-                                          Default is `$false`.
+                                          Default is `$false.
         -StorageAccountSku                Storage Account SKU.
-                                          Default is `Standard_LRS`.
+                                          Default is 'Standard_LRS'.
 
         -ProvisionLogAnalyticsWorkspace   To provision Log Analytics Workspace
-                                          or not. Default is `$false`.
+                                          or not. Default is `$false.
         -LogAnalyticsWorkspaceSku         Log Analytics workspace SKU.
-                                          Default is `PerGB2018`.
+                                          Default is 'PerGB2018'.
 
         -ProvisionAppInsights             To provision Application Insights
-                                          or not. Default is `$false`.
+                                          or not. Default is `$false.
         -AppInsightsType                  Application Insights type.
-                                          Default is `web`.
+                                          Default is 'web'.
         -AppInsightsIngestionMode         Application Insights data ingestion
-                                          mode. Default is `ApplicationInsights`.
+                                          mode. Default is 'ApplicationInsights'.
 
         -ProvisionConsumptionPlan         To provision Consumption Plan or not.
-                                          Default is `$false`.
+                                          Default is `$false.
         -ConsumptionPlanIsLinux           To enable Linux Consumption Plan
-                                          or not. Default is `$false`.
+                                          or not. Default is `$false.
 
         -ProvisionFunctionApp             To provision Function App or not.
-                                          Default is `$false`.
+                                          Default is `$false.
         -FunctionEnvironment              Function App environment.
-                                          Default is `Production`.
+                                          Default is 'Production'.
+        -FunctionExtensionVersion         Function App extension version.
+                                          Default is 'v4'.
         -FunctionWorkerRuntime            Function App worker runtime.
-                                          Default is `dotnet`.
+                                          Default is 'dotnet'.
 
         -ProvisionServiceBus              To provision Service Bus or not.
-                                          Default is `$false`.
+                                          Default is `$false.
         -ServiceBusSku                    Service Bus SKU.
-                                          Default is `Standard`.
+                                          Default is 'Standard'.
         -ServiceBusAuthRule               Service Bus authorisation rule.
-                                          Default is `RootManageSharedAccessKey`.
+                                          Default is 'RootManageSharedAccessKey'.
 
         -ProvisionServiceBusTopic         To provision Service Bus topic or not.
-                                          Default is `$false`.
+                                          Default is `$false.
         -ServiceBusTopic                  Service Bus topic name.
                                           Default is empty string.
-                                          If -ProvisionServiceBusTopic is `$true`,
+                                          If -ProvisionServiceBusTopic is `$true,
                                           this parameter must have a value.
                                           If -ProvisionServiceBusTopicSubscription
-                                          is `$true`, this parameter must have a
+                                          is `$true, this parameter must have a
                                           value.
 
         -ProvisionServiceBusTopicSubscription
                                           To provision Service Bus topic
                                           subscription or not.
-                                          Default is `$false`.
+                                          Default is `$false.
         -ServiceBusTopicSubscription      Service Bus topic subscription name.
                                           Default is empty string.
                                           If -ProvisionServiceBusTopicSubscription
-                                          is `$true`, this parameter must have a
+                                          is `$true, this parameter must have a
                                           value.
 
         -ProvisionCosmosDb                To provision Cosmos DB or not.
-                                          Default is `$false`.
+                                          Default is `$false.
         -CosmosDbAccountOfferType         Cosmos DB account type.
-                                          Default is `Standard`.
+                                          Default is 'Standard'.
         -CosmosDbAutomaticFailover        To enable failover or not.
-                                          Default is `$true`.
+                                          Default is `$true.
         -CosmosDbConsistencyLevel         Cosmos DB consistency level.
-                                          Default is `Session`.
+                                          Default is 'Session'.
         -CosmosDbPrimaryRegion            Cosmos DB primary region.
-                                          Default is `West US 2`.
+                                          Default is 'West US 2'.
         -CosmosDbCapability               Cosmos DB capability.
-                                          Default is `EnableServerless`.
+                                          Default is 'EnableServerless'.
         -CosmosDbBackupStorageRedundancy  Cosmos DB backup storage redundancy.
-                                          Default is `Local`.
+                                          Default is 'Local'.
 
         -ProvisionApiMangement            To provision API Management or not.
-                                          Default is `$false`.
+                                          Default is `$false.
         -ApiManagementSkuName             API Management SKU name.
-                                          Default is `Consumption`.
+                                          Default is 'Consumption'.
         -ApiManagementSkuCapacity         API Management SKU capacity.
                                           Default is 0.
         -ApiManagementPublisherName       API Management publisher name.
                                           Default is empty string.
-                                          If -ProvisionApiMangement is `$true`,
+                                          If -ProvisionApiMangement is `$true,
                                           this parameter must have a value.
         -ApiManagementPublisherEmail      API Management publisher email.
                                           Default is empty string.
-                                          If -ProvisionApiMangement is `$true`,
+                                          If -ProvisionApiMangement is `$true,
                                           this parameter must have a value.
 
         -WhatIf:                          Show what would happen without
@@ -425,6 +433,7 @@ $params = @{
 
     functionAppToProvision = @{ value = $ProvisionFunctionApp };
     functionEnvironment = @{ value = $FunctionEnvironment };
+    functionExtensionVersion = @{ value = $FunctionExtensionVersion };
     functionWorkerRuntime = @{ value = $FunctionWorkerRuntime };
 
     serviceBusToProvision = @{ value = $ProvisionServiceBus };
@@ -457,12 +466,14 @@ $params = @{
 # $params | ConvertTo-Json -Compress
 # $params | ConvertTo-Json -Compress | ConvertTo-Json
 
+$stringified = $params | ConvertTo-Json -Compress | ConvertTo-Json
+
 # Provision the resources
 if ($WhatIf -eq $true) {
     Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Provisioning resources as a test ..."
     az deployment group create -g $ResourceGroupName -n $DeploymentName `
         -f ./azuredeploy.bicep `
-        -p $($params | ConvertTo-Json -Compress | ConvertTo-Json) `
+        -p $stringified `
         -w
 
         # -u https://raw.githubusercontent.com/fitability/fitability-api/main/resources/azuredeploy.bicep `
@@ -470,7 +481,7 @@ if ($WhatIf -eq $true) {
     Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Provisioning resources ..."
     az deployment group create -g $ResourceGroupName -n $DeploymentName `
         -f ./azuredeploy.bicep `
-        -p $($params | ConvertTo-Json -Compress | ConvertTo-Json) `
+        -p $stringified `
         --verbose
 
         # -u https://raw.githubusercontent.com/fitability/fitability-api/main/resources/azuredeploy.bicep `

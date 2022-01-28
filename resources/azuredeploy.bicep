@@ -65,7 +65,11 @@ param functionAppToProvision bool = false
     'Production'
 ])
 param functionEnvironment string = 'Production'
-
+@allowed([
+    'v3'
+    'v4'
+])
+param functionExtensionVersion string = 'v4'
 @allowed([
     'dotnet'
     'dotnet-isolated'
@@ -223,6 +227,7 @@ module fncapp './functionApp.bicep' = if (functionAppToProvision) {
         appInsightsId: appins.outputs.id
         consumptionPlanId: csplan.outputs.id
         functionEnvironment: functionEnvironment
+        functionExtensionVersion: functionExtensionVersion
         functionWorkerRuntime: functionWorkerRuntime
     }
 }

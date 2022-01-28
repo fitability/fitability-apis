@@ -23,6 +23,12 @@ param consumptionPlanId string
 param functionEnvironment string = 'Production'
 
 @allowed([
+    'v3'
+    'v4'
+])
+param functionExtensionVersion string = 'v4'
+
+@allowed([
     'dotnet'
     'dotnet-isolated'
     'java'
@@ -51,6 +57,7 @@ var functionApp = {
     name: suffix == '' ? format(metadata.longName, 'fncapp', '') : format(metadata.longName, 'fncapp', '-${suffix}')
     location: location
     environment: functionEnvironment
+    extensionVersion: replace(functionExtensionVersion, 'v', '~')
     workerRuntime: functionWorkerRuntime
 }
 
@@ -95,7 +102,7 @@ resource fncapp 'Microsoft.Web/sites@2021-02-01' = {
                 }
                 {
                     name: 'FUNCTIONS_EXTENSION_VERSION'
-                    value: '~4'
+                    value: functionApp.extensionVersion
                 }
                 {
                     name: 'FUNCTIONS_WORKER_RUNTIME'
