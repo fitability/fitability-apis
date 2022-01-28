@@ -12,9 +12,6 @@ on:
     paths:
     - 'users/**'
 
-env:
-  API_NAME: 'users'
-
 jobs:
   call_dotnet_build:
     uses: fitability/fitability-api/.github/workflows/dotnet-build.yaml@main

@@ -1,0 +1,87 @@
+name: 'Java Build and Test'
+
+on:
+  workflow_call:
+    inputs:
+      job_name:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+      api_name:
+        type: string
+        required: true
+
+jobs:
+  build_test_analyse:
+    name: ${{ inputs.job_name }}
+
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+    - name: Set environment variables
+      shell: bash
+      run: |
+        echo "FUNCTION_APP_PATH=${{ github.workspace }}/${{ inputs.api_name }}" >> $GITHUB_ENV
+
+    # - name: Check environment variables
+    #   shell: bash
+    #   run: |
+    #     echo $FUNCTION_APP_PATH
+
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Setup JDK
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'microsoft'
+        java-version: '17.x'
+        cache: 'maven'
+        check-latest: true
+
+    - name: Check Java version
+      shell: bash
+      run: |
+        echo $JAVA_HOME
+        echo " "
+        java --version
+        echo " "
+        mvn -v
+
+    - name: Initialise CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: 'java'
+
+    - name: Restore packages and build project
+      shell: bash
+      run: |
+        pushd $FUNCTION_APP_PATH
+        mvn clean package
+        popd
+
+    - name: Test project
+      shell: bash
+      run: |
+        pushd $FUNCTION_APP_PATH
+        mvn test
+        popd
+
+    - name: Perform CodeQL analysis
+      uses: github/codeql-action/analyze@v1
+
+    - name: Create FunctionApp artifact
+      shell: bash
+      run: |
+        pushd $FUNCTION_APP_PATH
+        mvn azure-functions:package
+        popd
+
+    - name: Upload FunctionApp artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.api_name }}_app
+        path: ${{ input.api_name }}/target/azure-functions/${{ input.api_name }}
