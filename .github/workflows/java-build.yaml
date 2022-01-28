@@ -85,3 +85,9 @@ jobs:
       with:
         name: ${{ inputs.api_name }}_app
         path: ${{ inputs.api_name }}/target/azure-functions/${{ inputs.api_name }}
+
+    - name: Upload analysis report
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.api_name }}_app
+        path: ${{ github.workspace }}/../results/java.sarif
