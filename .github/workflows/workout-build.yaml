@@ -49,7 +49,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         distribution: 'microsoft'
-        java-version: '11.x'
+        java-version: '17.x'
         cache: 'maven'
         check-latest: true
 
