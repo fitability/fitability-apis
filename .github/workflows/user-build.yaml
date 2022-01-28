@@ -21,9 +21,9 @@ jobs:
     with:
       job_name: 'User API'
       environment: 'dev'
-      api_name: '${{ env.API_NAME }}'
+      api_name: 'users'
       api_app_name: 'Fitability.Api.Users'
-      api_app_path: '${{ github.workspace }}/${{ env.API_NAME }}'
+      api_app_path: '${{ github.workspace }}/users'
       resource_name: '${{ secrets.RESOURCE_NAME }}'
       location_code: 'krc'
     secrets:
