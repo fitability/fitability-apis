@@ -70,11 +70,6 @@ jobs:
     - name: Perform CodeQL analysis
       uses: github/codeql-action/analyze@v1
 
-    - name: Get CodeQL analysis report
-      shell: pwsh
-      run: |
-        Write-Output "Result: $env:RUNNER_TEMP/codeql_databases/csharp.zip"
-
     - name: Create FunctionApp artifact
       shell: bash
       run: |
@@ -86,9 +81,3 @@ jobs:
       with:
         name: ${{ inputs.api_name }}_app
         path: ${{ inputs.api_name }}/published
-
-    - name: Upload analysis report
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ inputs.api_name }}_analysis
-        path: ${{ runner.temp }}/codeql_databases/csharp.zip
