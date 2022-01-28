@@ -53,6 +53,15 @@ jobs:
         cache: 'maven'
         check-latest: true
 
+    - name: Check Java version
+      shell: bash
+      run: |
+        echo $JAVA_HOME
+        echo " "
+        java --version
+        echo " "
+        mvn -v
+
     - name: Initialise CodeQL
       uses: github/codeql-action/init@v1
       with:
