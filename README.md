@@ -10,17 +10,14 @@
 This provides APIs for all fitability:tm: apps.
 
 
-## Getting Started ##
+## Prerequisites ##
 
 This repository contains all API apps written in different languages including C# and Java. All API apps are running on [Azure Functions](https://docs.microsoft.com/azure/azure-functions/functions-overview?WT.mc_id=dotnet-55788-juyoo). Therefore, setting up the development environment to locally run all Azure Functions apps is critical.
-
-
-### Prerequisites ###
 
 Depending on your developer expertise, you may be required to install some or all of the following IDE and tools to locally develop API applications.
 
 
-#### For .NET ####
+### For .NET ###
 
 For .NET-based API apps, you must install the following IDE and SDK.
 
@@ -35,7 +32,7 @@ For .NET-based API apps, you must install the following IDE and SDK.
 If you are new to .NET-based Azure Functions app, please read this doc, [Develop C# class library functions using Azure Functions](https://docs.microsoft.com/azure/azure-functions/functions-dotnet-class-library?WT.mc_id=dotnet-55788-juyoo), first and get yourself used to it.
 
 
-#### For Java ####
+### For Java ###
 
 For Java-based API apps, you must install the following IDE and SDK.
 
@@ -59,7 +56,7 @@ If you are new to Java-based Azure Functions app, please read this doc, [Azure F
 > **NOTE**: Although the document above says that the Azure Functions v4 runtime supports both Java 8 and 11, our APIs are targeting Java 8, due to some limitations as of January 2022. We will continue to investigate when to migrate to Jave 11 or higher.
 
 
-#### For Azure Resources ####
+### For Azure Resources ###
 
 For Azure resources, you are strongly recommended to install the following IDE, extensions and tools.
 
@@ -69,6 +66,11 @@ For Azure resources, you are strongly recommended to install the following IDE, 
 * [PowerShell](https://docs.microsoft.com/powershell/scripting/overview?WT.mc_id=dotnet-55788-juyoo)
 * [Azure CLI](https://docs.microsoft.com/cli/azure/what-is-azure-cli?WT.mc_id=dotnet-55788-juyoo)
 * [Azure Storage Explorer](https://azure.microsoft.com/features/storage-explorer?WT.mc_id=dotnet-55788-juyoo)
+
+
+## Getting Started ##
+
+TBD
 
 
 ## Known Issues ##
