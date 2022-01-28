@@ -18,14 +18,13 @@ on:
       api_app_path:
         type: string
         required: true
-      resource_name:
-        type: string
-        required: true
       location_code:
         type: string
         required: true
     secrets:
       azure_credentials:
+        required: true
+      resource_name:
         required: true
 
 jobs:
@@ -39,8 +38,8 @@ jobs:
     - name: Set environment variables
       shell: bash
       run: |
-        echo "RESOURCE_GROUP_NAME=rg-${{ inputs.resource_name }}-${{ inputs.environment }}-${{ inputs.location_code }}" >> $GITHUB_ENV
-        echo "FUNCTIONAPP_NAME=fncapp-${{ inputs.resource_name }}-${{ inputs.api_name }}-${{ inputs.environment }}-${{ inputs.location_code }}" >> $GITHUB_ENV
+        echo "RESOURCE_GROUP_NAME=rg-${{ secrets.resource_name }}-${{ inputs.environment }}-${{ inputs.location_code }}" >> $GITHUB_ENV
+        echo "FUNCTIONAPP_NAME=fncapp-${{ secrets.resource_name }}-${{ inputs.api_name }}-${{ inputs.environment }}-${{ inputs.location_code }}" >> $GITHUB_ENV
         echo "FUNCTIONAPP_PATH=${{ github.workspace }}/${{ inputs.api_name }}/src/${{ inputs.api_app_name }}" >> $GITHUB_ENV
 
     # - name: Check environment variables
