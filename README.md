@@ -4,6 +4,9 @@
 
 # API for fitability:tm: #
 
+[![Build: User API](https://github.com/fitability/fitability-api/actions/workflows/user-build.yaml/badge.svg?branch=main)](https://github.com/fitability/fitability-api/actions/workflows/user-build.yaml)
+[![Build: Workout API](https://github.com/fitability/fitability-api/actions/workflows/workout-build.yaml/badge.svg?branch=main)](https://github.com/fitability/fitability-api/actions/workflows/workout-build.yaml)
+
 This provides APIs for all fitability:tm: apps.
 
 
