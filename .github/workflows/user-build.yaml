@@ -1,4 +1,4 @@
-name: 'Build: User API'
+name: 'User API'
 
 on:
   push:

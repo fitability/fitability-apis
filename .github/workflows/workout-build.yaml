@@ -1,4 +1,4 @@
-name: 'Build: Workout API'
+name: 'Workout API'
 
 on:
   push:
