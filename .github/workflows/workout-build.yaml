@@ -25,7 +25,7 @@ jobs:
 
   call_java_deploy_dev:
     uses: fitability/fitability-api/.github/workflows/java-deploy.yaml@main
-    needs: call_dotnet_build
+    needs: call_java_build
     with:
       job_name: 'Workout API'
       environment: 'dev'
