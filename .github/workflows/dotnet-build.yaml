@@ -81,3 +81,18 @@ jobs:
       with:
         name: ${{ inputs.api_name }}_app
         path: ${{ inputs.api_name }}/published
+
+    - name: Get analysis report path
+      id: report
+      shell: bash
+      run: |
+        cd ${{ github.workspace }}/../
+        REPORT_PATH=$(pwd)
+
+        echo ::set-output name=path::$REPORT_PATH
+
+    - name: Upload analysis report
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.api_name }}_report
+        path: ${{ steps.report.outputs.path }}/results/csharp.sarif
