@@ -22,7 +22,13 @@ Param(
 
     [string]
     [Parameter(Mandatory=$false)]
-    $LocationCode = "wus2",
+    [ValidateSet("", "koreacentral", "westus2")]
+    $Location = "",
+
+    [string]
+    [Parameter(Mandatory=$false)]
+    [ValidateSet("", "krc", "wus2")]
+    $LocationCode = "",
 
     [string]
     [Parameter(Mandatory=$false)]
@@ -207,6 +213,7 @@ function Show-Usage {
             -ResourceName <resource name> ``
             [-ResourceShortName <resource short name> ``
             [-ResourceNameSuffix <resource name suffix>] ``
+            [-Location <location>] ``
             [-LocationCode <location code>] ``
             [-Environment <environment>] ``
 
@@ -263,8 +270,10 @@ function Show-Usage {
                                           Default is to use the resource name.
         -ResourceNameSuffix               Resource name suffix.
                                           Default is empty string.
+        -Location                         Resource location.
+                                          Default is empty string.
         -LocationCode                     location code.
-                                          Default is 'wus2'.
+                                          Default is empty string.
         -Environment                      environment.
                                           Default is 'dev'.
 
@@ -415,6 +424,7 @@ $params = @{
     name = @{ value = $ResourceName };
     shortName = @{ value = $ResourceShortName };
     suffix = @{ value = $ResourceNameSuffix };
+    location = @{ value = $Location };
     locationCode = @{ value = $LocationCode };
     env = @{ value = $Environment };
 

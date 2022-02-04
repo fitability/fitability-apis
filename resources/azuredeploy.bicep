@@ -1,8 +1,8 @@
 param name string
 param shortName string = ''
 param suffix string = ''
-param location string = resourceGroup().location
-param locationCode string = 'wus2'
+param location string = ''
+param locationCode string = ''
 @allowed([
     'dev'
     'test'
@@ -140,13 +140,22 @@ param apiMgmtSkuCapacity int = 0
 param apiMgmtPublisherName string
 param apiMgmtPublisherEmail string
 
+var locationResolved = location == '' ? resourceGroup().location : location
+var locationCodeMap = {
+    koreacentral : 'krc'
+    'Korea Central' : 'krc'
+    westus2: 'wus2'
+    'West US 2' : 'wus2'
+}
+var locationCodeResolved = locationCode == '' ? locationCodeMap[locationResolved] : locationCode
+
 module st './storageAccount.bicep' = if (storageAccountToProvision) {
     name: 'StorageAccount'
     params: {
         name: shortName
         suffix: suffix
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         storageAccountSku: storageAccountSku
     }
@@ -157,8 +166,8 @@ module wrkspc './logAnalyticsWorkspace.bicep' = if (workspaceToProvision && func
     params: {
         name: name
         suffix: suffix
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         workspaceSku: workspaceSku
     }
@@ -168,8 +177,8 @@ module wrkspcapimgmt './logAnalyticsWorkspace.bicep' = if (workspaceToProvision 
     name: 'LogAnalyticsWorkspaceForApiManagement'
     params: {
         name: name
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         workspaceSku: workspaceSku
     }
@@ -180,8 +189,8 @@ module appins './appInsights.bicep' = if (appInsightsToProvision && functionAppT
     params: {
         name: name
         suffix: suffix
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         appInsightsType: appInsightsType
         appInsightsIngestionMode: appInsightsIngestionMode
@@ -193,8 +202,8 @@ module appinsapimgmt './appInsights.bicep' = if (appInsightsToProvision && apiMg
     name: 'ApplicationInsightsForApiManagement'
     params: {
         name: name
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         appInsightsType: appInsightsType
         appInsightsIngestionMode: appInsightsIngestionMode
@@ -207,8 +216,8 @@ module csplan './consumptionPlan.bicep' = if (consumptionPlanToProvision) {
     params: {
         name: name
         suffix: suffix
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         consumptionPlanIsLinux: consumptionPlanIsLinux
     }
@@ -219,8 +228,8 @@ module fncapp './functionApp.bicep' = if (functionAppToProvision) {
     params: {
         name: name
         suffix: suffix
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         storageAccountId: st.outputs.id
         storageAccountName: st.outputs.name
@@ -236,8 +245,8 @@ module svcbus './serviceBus.bicep' = if (serviceBusToProvision) {
     name: 'ServiceBus'
     params: {
         name: name
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         serviceBusSku: serviceBusSku
         serviceBusAuthRule: serviceBusAuthRule
@@ -251,8 +260,8 @@ module svcbustpc './serviceBusTopic.bicep' = if (serviceBusToProvision && servic
     ]
     params: {
         name: name
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         serviceBusTopic: serviceBusTopic
     }
@@ -262,8 +271,8 @@ module svcbustpcstandalone './serviceBusTopic.bicep' = if (!serviceBusToProvisio
     name: 'ServiceBusTopicStandAlone'
     params: {
         name: name
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         serviceBusTopic: serviceBusTopic
     }
@@ -276,8 +285,8 @@ module svcbustpcsub './serviceBusTopicSubscription.bicep' = if (serviceBusTopicT
     ]
     params: {
         name: name
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         serviceBusTopic: serviceBusTopic
         serviceBusSubscription: serviceBusTopicSubscription
@@ -288,8 +297,8 @@ module svcbustpcsubstandalone './serviceBusTopicSubscription.bicep' = if (!servi
     name: 'ServiceBusTopicSubscriptionStandAlone'
     params: {
         name: name
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         serviceBusTopic: serviceBusTopic
         serviceBusSubscription: serviceBusTopicSubscription
@@ -300,8 +309,8 @@ module cosdba './cosmosDb.bicep' = if (cosmosDbToProvision) {
     name: 'CosmosDB'
     params: {
         name: name
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         cosmosDbAccountOfferType: cosmosDbAccountOfferType
         cosmosDbAutomaticFailover: cosmosDbAutomaticFailover
@@ -316,8 +325,8 @@ module apim './apiManagement.bicep' = if (apiMgmtToProvision) {
     name: 'ApiManagement'
     params: {
         name: name
-        location: location
-        locationCode: locationCode
+        location: locationResolved
+        locationCode: locationCodeResolved
         env: env
         appInsightsId: appinsapimgmt.outputs.id
         appInsightsInstrumentationKey: appinsapimgmt.outputs.instrumentationKey
