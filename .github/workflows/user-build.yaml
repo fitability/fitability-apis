@@ -16,7 +16,7 @@ jobs:
   call_dotnet_build:
     uses: fitability/fitability-api/.github/workflows/dotnet-build.yaml@main
     with:
-      job_name: 'User API'
+      job_name: 'User API Build'
       environment: 'dev'
       api_name: 'users'
       api_app_name: 'Fitability.Api.Users'
@@ -25,7 +25,7 @@ jobs:
     uses: fitability/fitability-api/.github/workflows/dotnet-deploy.yaml@main
     needs: call_dotnet_build
     with:
-      job_name: 'User API'
+      job_name: 'User API to DEV'
       environment: 'dev'
       api_name: 'users'
       location_code: 'krc'

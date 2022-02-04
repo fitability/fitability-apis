@@ -19,7 +19,7 @@ jobs:
   call_java_build:
     uses: fitability/fitability-api/.github/workflows/java-build.yaml@main
     with:
-      job_name: 'Workout API'
+      job_name: 'Workout API Build'
       environment: 'dev'
       api_name: 'workouts'
 
@@ -27,7 +27,7 @@ jobs:
     uses: fitability/fitability-api/.github/workflows/java-deploy.yaml@main
     needs: call_java_build
     with:
-      job_name: 'Workout API'
+      job_name: 'Workout API to DEV'
       environment: 'dev'
       api_name: 'workouts'
       location_code: 'krc'
