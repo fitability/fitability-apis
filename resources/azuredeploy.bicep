@@ -142,10 +142,10 @@ param apiMgmtPublisherEmail string
 
 var locationResolved = location == '' ? resourceGroup().location : location
 var locationCodeMap = {
-    koreacentral : 'krc'
-    'Korea Central' : 'krc'
+    koreacentral: 'krc'
+    'Korea Central': 'krc'
     westus2: 'wus2'
-    'West US 2' : 'wus2'
+    'West US 2': 'wus2'
 }
 var locationCodeResolved = locationCode == '' ? locationCodeMap[locationResolved] : locationCode
 
