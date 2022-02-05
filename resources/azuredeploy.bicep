@@ -23,6 +23,8 @@ param storageAccountToProvision bool = false
     'Premium_ZRS'
 ])
 param storageAccountSku string = 'Standard_LRS'
+param storageAccountBlobContainers array = []
+param storageAccountTables array = []
 
 // Log Analytics Workspace
 param workspaceToProvision bool = false
@@ -158,6 +160,8 @@ module st './storageAccount.bicep' = if (storageAccountToProvision) {
         locationCode: locationCodeResolved
         env: env
         storageAccountSku: storageAccountSku
+        storageAccountBlobContainers: storageAccountBlobContainers
+        storageAccountTables: storageAccountTables
     }
 }
 
