@@ -15,6 +15,8 @@ param storageAccountName string
 param appInsightsId string
 param consumptionPlanId string
 
+param functionIsLinux bool = false
+
 @allowed([
     'Development'
     'Staging'
@@ -33,10 +35,29 @@ param functionExtensionVersion string = 'v4'
     'dotnet-isolated'
     'java'
     'node'
-    'poweshell'
     'python'
+    'poweshell'
 ])
 param functionWorkerRuntime string = 'dotnet'
+
+@allowed([
+    // dotnet / dotnet-isolated
+    'v6.0'
+    // java
+    'v8'
+    'v11'
+    // node.js
+    'v12'
+    'v14'
+    'v16'
+    // python
+    'v3.7'
+    'v3.8'
+    'v3.9'
+    // powershell
+    'v7'
+])
+param functionWorkerVersion string = 'v6.0'
 
 var metadata = {
     longName: '{0}-${name}{1}-${env}-${locationCode}'
@@ -53,9 +74,24 @@ var consumption = {
 var appInsights = {
     id: appInsightsId
 }
+var linuxFxVersionMap = {
+    'dotnet': ''
+    'dotnet-isolated': ''
+    'java': 'Java|{0}'
+    'node': 'Node|{0}'
+    'python': 'Python|{0}'
+    'powershell': 'PowerShell|{0}'
+}
 var functionApp = {
     name: suffix == '' ? format(metadata.longName, 'fncapp', '') : format(metadata.longName, 'fncapp', '-${suffix}')
     location: location
+    kind: functionIsLinux ? 'functionapp,linux' : 'functionapp'
+    linuxFxVersion: functionIsLinux ? format(linuxFxVersionMap[functionWorkerRuntime], replace(functionWorkerVersion, 'v', '')) : ''
+    netFrameworkVersion: 'v6.0'
+    nodeVersion: ''
+    javaVersion: !functionIsLinux && functionWorkerRuntime == 'java' ? replace(functionWorkerVersion, 'v', '') : null
+    pythonVersion: ''
+    powerShellVersion: !functionIsLinux && functionWorkerRuntime == 'powershell' ? replace(functionWorkerVersion, 'v', '~') : ''
     environment: functionEnvironment
     extensionVersion: replace(functionExtensionVersion, 'v', '~')
     workerRuntime: functionWorkerRuntime
@@ -64,20 +100,17 @@ var functionApp = {
 resource fncapp 'Microsoft.Web/sites@2021-02-01' = {
     name: functionApp.name
     location: functionApp.location
-    kind: 'functionapp'
+    kind: functionApp.kind
     properties: {
         serverFarmId: consumption.id
         httpsOnly: true
         siteConfig: {
-            cors: {
-                allowedOrigins: [
-                    'https://functions.azure.com'
-                    'https://functions-staging.azure.com'
-                    'https://functions-next.azure.com'
-                    'https://flow.microsoft.com'
-                    'https://asia.flow.microsoft.com'
-                ]
-            }
+            linuxFxVersion: functionApp.linuxFxVersion
+            netFrameworkVersion: functionApp.netFrameworkVersion
+            nodeVersion: functionApp.nodeVersion
+            javaVersion: functionApp.javaVersion
+            pythonVersion: functionApp.pythonVersion
+            powerShellVersion: functionApp.powerShellVersion
             appSettings: [
                 // Common Settings
                 {

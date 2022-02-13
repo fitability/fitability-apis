@@ -110,6 +110,11 @@ Param(
     [Parameter(Mandatory=$false)]
     [ValidateSet("dotnet", "dotnet-isolated", "java", "node", "poweshell", "python")]
     $FunctionWorkerRuntime = "dotnet",
+
+    [string]
+    [Parameter(Mandatory=$false)]
+    [ValidateSet("v6.0", "v8", "v11", "v12", "v14", "v16", "v3.7", "v3.8", "v3.9", "v7")]
+    $FunctionWorkerRuntimeVersion = "v6.0",
     ### Function App ###
 
     ### Service Bus ###
@@ -244,6 +249,7 @@ function Show-Usage {
             [-FunctionEnvironment <Function App environment>] ``
             [-FunctionExtensionVersion <Function App extension version>] ``
             [-FunctionWorkerRuntime <Function App worker runtime>] ``
+            [-FunctionWorkerRuntimeVersion <Function App worker runtime version>] ``
 
             [-ProvisionServiceBus <`$true|`$false>] ``
             [-ServiceBusSku <Service Bus SKU>] ``
@@ -321,6 +327,8 @@ function Show-Usage {
                                           Default is 'v4'.
         -FunctionWorkerRuntime            Function App worker runtime.
                                           Default is 'dotnet'.
+        -FunctionWorkerRuntimeVersion     Function App worker runtime version.
+                                          Default is 'v6.0'.
 
         -ProvisionServiceBus              To provision Service Bus or not.
                                           Default is `$false.
@@ -461,6 +469,7 @@ $params = @{
     functionEnvironment = @{ value = $FunctionEnvironment };
     functionExtensionVersion = @{ value = $FunctionExtensionVersion };
     functionWorkerRuntime = @{ value = $FunctionWorkerRuntime };
+    functionWorkerVersion = @{ value = $FunctionWorkerRuntimeVersion };
 
     serviceBusToProvision = @{ value = $ProvisionServiceBus };
     serviceBusSku = @{ value = $ServiceBusSku };

@@ -77,10 +77,28 @@ param functionExtensionVersion string = 'v4'
     'dotnet-isolated'
     'java'
     'node'
-    'poweshell'
     'python'
+    'poweshell'
 ])
 param functionWorkerRuntime string = 'dotnet'
+@allowed([
+    // dotnet / dotnet-isolated
+    'v6.0'
+    // java
+    'v8'
+    'v11'
+    // node.js
+    'v12'
+    'v14'
+    'v16'
+    // python
+    'v3.7'
+    'v3.8'
+    'v3.9'
+    // powershell
+    'v7'
+])
+param functionWorkerVersion string = 'v6.0'
 
 // Service Bus
 param serviceBusToProvision bool = false
@@ -239,9 +257,11 @@ module fncapp './functionApp.bicep' = if (functionAppToProvision) {
         storageAccountName: st.outputs.name
         appInsightsId: appins.outputs.id
         consumptionPlanId: csplan.outputs.id
+        functionIsLinux: consumptionPlanIsLinux
         functionEnvironment: functionEnvironment
         functionExtensionVersion: functionExtensionVersion
         functionWorkerRuntime: functionWorkerRuntime
+        functionWorkerVersion: functionWorkerVersion
     }
 }
 
