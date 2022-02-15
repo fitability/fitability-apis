@@ -2,6 +2,8 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
+using Fitability.Api.Models;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -15,22 +17,22 @@ using Newtonsoft.Json;
 
 namespace Fitability.Api.Users
 {
-    public class Function1
+    public class GreetingsHttpTrigger
     {
-        private readonly ILogger<Function1> _logger;
+        private readonly ILogger<GreetingsHttpTrigger> _logger;
 
-        public Function1(ILogger<Function1> log)
+        public GreetingsHttpTrigger(ILogger<GreetingsHttpTrigger> log)
         {
             _logger = log;
         }
 
-        [FunctionName("Function1")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
+        [FunctionName(nameof(GreetingsHttpTrigger.Greetings))]
+        [OpenApiOperation(operationId: "greetings", tags: new[] { "greetings" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req)
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(GreetingResponse), Description = "The OK response")]
+        public async Task<IActionResult> Greetings(
+            [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "greetings")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -44,7 +46,9 @@ namespace Fitability.Api.Users
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
-            return new OkObjectResult(responseMessage);
+            var res = new GreetingResponse() { Message = responseMessage };
+
+            return new OkObjectResult(res);
         }
     }
 }
