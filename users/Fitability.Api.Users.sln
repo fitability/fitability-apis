@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5DBE725F-7D6C-4D09-BED9-161786066EC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fitability.Api.Models", "src\Fitability.Api.Models\Fitability.Api.Models.csproj", "{12737E28-7199-42C1-8FE5-9F9C82DD44ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fitability.Api.Models", "src\Fitability.Api.Models\Fitability.Api.Models.csproj", "{12737E28-7199-42C1-8FE5-9F9C82DD44ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fitability.Api.Users.Models", "src\Fitability.Api.Users.Models\Fitability.Api.Users.Models.csproj", "{6A56CCF6-4FAE-4A7F-9C0C-FE07589C5E7B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fitability.Api.Users", "src\Fitability.Api.Users\Fitability.Api.Users.csproj", "{E9FC4CA6-530C-4594-A6CF-633C665A52ED}"
 EndProject
@@ -23,6 +25,10 @@ Global
 		{12737E28-7199-42C1-8FE5-9F9C82DD44ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12737E28-7199-42C1-8FE5-9F9C82DD44ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12737E28-7199-42C1-8FE5-9F9C82DD44ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A56CCF6-4FAE-4A7F-9C0C-FE07589C5E7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A56CCF6-4FAE-4A7F-9C0C-FE07589C5E7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A56CCF6-4FAE-4A7F-9C0C-FE07589C5E7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A56CCF6-4FAE-4A7F-9C0C-FE07589C5E7B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E9FC4CA6-530C-4594-A6CF-633C665A52ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E9FC4CA6-530C-4594-A6CF-633C665A52ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9FC4CA6-530C-4594-A6CF-633C665A52ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,6 +43,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{12737E28-7199-42C1-8FE5-9F9C82DD44ED} = {5DBE725F-7D6C-4D09-BED9-161786066EC2}
+		{6A56CCF6-4FAE-4A7F-9C0C-FE07589C5E7B} = {5DBE725F-7D6C-4D09-BED9-161786066EC2}
 		{E9FC4CA6-530C-4594-A6CF-633C665A52ED} = {5DBE725F-7D6C-4D09-BED9-161786066EC2}
 		{D665162E-7D76-49F6-A619-2255D73E32C3} = {778D9AC1-E177-40E7-86E2-E3C6E33D3A79}
 	EndGlobalSection
