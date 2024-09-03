@@ -44,7 +44,7 @@ jobs:
     #     echo $API_APP_PATH
 
     - name: Download FunctionApp artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4.1.7
       with:
         name: ${{ inputs.api_name }}_app
         path: ${{ env.API_APP_PATH }}
